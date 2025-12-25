@@ -16,6 +16,38 @@ const searchInput = document.querySelector('[data-search]');
 const searchClear = document.querySelector('[data-search-clear]');
 const searchToggle = document.querySelector('[data-search-toggle]');
 const searchPanel = document.querySelector('[data-search-panel]');
+const getSearchToggleLabelEl = () => {
+  if (!searchToggle) {
+    return null;
+  }
+  const existing = searchToggle.querySelector('[data-search-toggle-label]');
+  if (existing) {
+    return existing;
+  }
+
+  const label = document.createElement('span');
+  label.setAttribute('data-search-toggle-label', '');
+  label.textContent = (searchToggle.textContent || '').trim() || 'Cerca';
+
+  Array.from(searchToggle.childNodes).forEach((node) => {
+    if (node.nodeType === Node.TEXT_NODE) {
+      node.textContent = '';
+    }
+  });
+
+  searchToggle.appendChild(label);
+  return label;
+};
+
+const searchToggleLabelEl = getSearchToggleLabelEl();
+const searchToggleLabelClosed = searchToggle
+  ? (searchToggle.dataset.labelClosed
+    || (searchToggleLabelEl ? (searchToggleLabelEl.textContent || '').trim() : (searchToggle.textContent || '').trim())
+    || 'Cerca')
+  : 'Cerca';
+const searchToggleLabelOpen = searchToggle
+  ? (searchToggle.dataset.labelOpen || 'Chiudi')
+  : 'Chiudi';
 const quickTotalEl = document.querySelector('[data-quick-total]');
 const quickbarEl = document.querySelector('[data-quickbar]');
 const modalEl = document.querySelector('[data-modal]');
@@ -89,19 +121,25 @@ const allergenLabels = {
 };
 
 const ingredientOptions = [
-  { value: 'mozzarella', label: 'Mozzarella' },
-  { value: 'prosciutto-cotto', label: 'Prosciutto cotto' },
-  { value: 'prosciutto-crudo', label: 'Prosciutto crudo' },
+  { value: 'mozzarella', label: 'Mozzarella di bufala' },
+  { value: 'stracciatella', label: 'Stracciatella' },
+  { value: 'prosciutto-cotto', label: 'Prosc. cotto' },
+  { value: 'prosciutto-crudo', label: 'Prosc. crudo' },
   { value: 'salsiccia', label: 'Salsiccia' },
-  { value: 'funghi', label: 'Funghi' },
+  { value: 'salamino', label: 'Salamino' },
+  { value: 'wurstel', label: 'Wurstel' },
+  { value: 'pancetta', label: 'Pancetta' },
+  { value: 'speck', label: 'Speck' },
+  { value: 'champignon', label: 'Champignon' },
+  { value: 'porcini', label: 'Porcini' },
   { value: 'carciofi', label: 'Carciofi' },
   { value: 'olive', label: 'Olive' },
   { value: 'cipolla', label: 'Cipolla' },
-  { value: 'peperoni', label: 'Peperoni' },
+  { value: 'porri', label: 'Porri' },
+  { value: 'brie', label: 'Brie' },
   { value: 'zucchine', label: 'Zucchine' },
   { value: 'melanzane', label: 'Melanzane' },
   { value: 'gorgonzola', label: 'Gorgonzola' },
-  { value: 'pecorino', label: 'Pecorino' },
   { value: 'rucola', label: 'Rucola' },
   { value: 'pomodorini', label: 'Pomodorini' },
 ];
@@ -109,7 +147,7 @@ const ingredientOptions = [
 const customizationConfigs = {
   pizza: {
     title: 'Pizza personalizzata',
-    subtitle: 'Base covaccino, bianca o rossa. Ingredienti extra: € 1 ciascuno.',
+    subtitle: 'Base covaccino, bianca, rossa  o margherita. Ingredienti extra: € 1 ciascuno. Senza lattosio: nessun supplemento.',
     fields: [
       {
         id: 'base',
@@ -121,6 +159,7 @@ const customizationConfigs = {
           { value: 'covaccino', label: 'Covaccino', price: 5 },
           { value: 'bianca', label: 'Bianca', price: 6 },
           { value: 'rossa', label: 'Rossa', price: 6 },
+          { value: 'margherita', label: 'Margherita', price: 6 },
         ],
       },
       {
@@ -138,6 +177,13 @@ const customizationConfigs = {
         options: [{ value: 'senza-glutine', label: 'Senza glutine' }],
       },
       {
+        id: 'lactosefree',
+        label: 'Senza lattosio',
+        type: 'checkbox',
+        pricePerItem: 0,
+        options: [{ value: 'senza-lattosio', label: 'Senza lattosio' }],
+      },
+      {
         id: 'note',
         label: 'Note',
         type: 'text',
@@ -147,7 +193,7 @@ const customizationConfigs = {
   },
   calzone: {
     title: 'Calzone personalizzato',
-    subtitle: 'Ripieno a scelta. Ingredienti extra: € 1 ciascuno.',
+    subtitle: 'Ripieno a scelta. Ingredienti extra: € 1 ciascuno. Senza lattosio: nessun supplemento.',
     fields: [
       {
         id: 'base',
@@ -170,6 +216,13 @@ const customizationConfigs = {
         type: 'checkbox',
         pricePerItem: 1,
         options: [{ value: 'senza-glutine', label: 'Senza glutine' }],
+      },
+      {
+        id: 'lactosefree',
+        label: 'Senza lattosio',
+        type: 'checkbox',
+        pricePerItem: 0,
+        options: [{ value: 'senza-lattosio', label: 'Senza lattosio' }],
       },
       {
         id: 'note',
@@ -224,24 +277,15 @@ const customizationConfigs = {
         label: 'Gin',
         type: 'select',
         required: true,
-        defaultValue: 'classico',
+        defaultValue: 'tanqueray',
         options: [
-          { value: 'classico', label: 'Gin classico', price: 6 },
-          { value: 'premium', label: 'Gin premium', price: 8 },
-          { value: 'top', label: 'Gin top', price: 10 },
-        ],
-      },
-      {
-        id: 'tonica',
-        label: 'Tonica',
-        type: 'select',
-        required: false,
-        defaultValue: '',
-        options: [
-          { value: '', label: 'Seleziona' },
-          { value: 'indian', label: 'Indian' },
-          { value: 'mediterranea', label: 'Mediterranea' },
-          { value: 'secca', label: 'Secca' },
+          { value: 'tanqueray', label: 'Tanqueray', price: 5 },
+          { value: 'bombay', label: 'Bombay', price: 6 },
+          { value: 'mare', label: 'Gin Mare', price: 7 },
+          { value: 'selva', label: 'Selvapura', price: 7 },
+          { value: 'vallombrosa', label: 'Gin Vallombrosa', price: 8 },
+          { value: 'ginepraio', label: 'Ginepraio', price: 7.5 },
+          { value: 'num', label: 'Num. 3', price: 7.5 },
         ],
       },
       {
@@ -489,8 +533,19 @@ const formatItemLabel = (item) => {
   if (!note) {
     return baseName;
   }
-  if (normalizeText(note).includes('senza glutine')) {
-    return `${baseName} - senza glutine`;
+  const normalized = normalizeText(note);
+  const hasGlutenFree = normalized.includes('senza glutine');
+  const hasLactoseFree = normalized.includes('senza lattosio');
+  if (hasGlutenFree || hasLactoseFree) {
+    const onlyFlags =
+      normalized.replace(/senza glutine|senza lattosio|\||,|;|\s+/g, '').trim() === '';
+    if (onlyFlags) {
+      const flags = [
+        hasGlutenFree ? 'senza glutine' : null,
+        hasLactoseFree ? 'senza lattosio' : null,
+      ].filter(Boolean);
+      return `${baseName} - ${flags.join(', ')}`;
+    }
   }
   return `${baseName} - ${note}`;
 };
@@ -518,26 +573,6 @@ const groupCartItems = (entries) => {
   });
 
   return { grouped, orderedCategories };
-};
-
-const iconSources = {
-  remove: 'img/icone e loghi/delete.svg',
-};
-
-const createIcon = (name, className = 'icon icon--sm') => {
-  const src = iconSources[name];
-  if (!src) {
-    return null;
-  }
-  const icon = document.createElement('img');
-  icon.src = src;
-  if (className) {
-    icon.className = className;
-  }
-  icon.alt = '';
-  icon.decoding = 'async';
-  icon.setAttribute('aria-hidden', 'true');
-  return icon;
 };
 
 const categories = menuData.filter((group) => Array.isArray(group.prodotti) && group.prodotti.length);
@@ -795,7 +830,10 @@ const createMenuItem = (item, category) => {
   const hasBasePrice = Number.isFinite(basePrice);
 
   let glutenInput = null;
-  if (!isCustom && category.categoria && category.categoria.toLowerCase().includes('pizze')) {
+  let lactoseInput = null;
+  const categoryName = normalizeText(category.categoria || '');
+
+  if (!isCustom && categoryName.includes('pizze')) {
     const hasGluten = allergens.includes('glutine');
     if (hasGluten) {
       const glutenWrap = document.createElement('label');
@@ -811,6 +849,28 @@ const createMenuItem = (item, category) => {
       glutenWrap.appendChild(glutenInput);
       glutenWrap.appendChild(glutenText);
       content.appendChild(glutenWrap);
+    }
+  }
+
+  if (!isCustom && (categoryName.includes('pizze') || categoryName.includes('calzoni'))) {
+    const hasDairy = allergens.includes('latte');
+    if (hasDairy) {
+      const lactoseWrap = document.createElement('label');
+      lactoseWrap.className = 'menu__lactose';
+      if (glutenInput) {
+        lactoseWrap.classList.add('menu__lactose--stacked');
+      }
+
+      lactoseInput = document.createElement('input');
+      lactoseInput.type = 'checkbox';
+      lactoseInput.className = 'menu__lactose-input';
+
+      const lactoseText = document.createElement('span');
+      lactoseText.textContent = 'Senza lattosio';
+
+      lactoseWrap.appendChild(lactoseInput);
+      lactoseWrap.appendChild(lactoseText);
+      content.appendChild(lactoseWrap);
     }
   }
 
@@ -837,13 +897,19 @@ const createMenuItem = (item, category) => {
   meta.appendChild(price);
   content.appendChild(meta);
 
+  const updateDisplayedPrice = () => {
+    if (!hasBasePrice) {
+      return;
+    }
+    const extra = glutenInput && glutenInput.checked ? 1 : 0;
+    price.textContent = formatPrice(basePrice + extra);
+  };
+
   if (glutenInput) {
-    glutenInput.addEventListener('change', () => {
-      if (hasBasePrice) {
-        const extra = glutenInput.checked ? 1 : 0;
-        price.textContent = formatPrice(basePrice + extra);
-      }
-    });
+    glutenInput.addEventListener('change', updateDisplayedPrice);
+  }
+  if (lactoseInput) {
+    lactoseInput.addEventListener('change', updateDisplayedPrice);
   }
 
   card.appendChild(media);
@@ -864,6 +930,9 @@ const createMenuItem = (item, category) => {
     if (event.target.closest('.menu__gluten')) {
       return;
     }
+    if (event.target.closest('.menu__lactose')) {
+      return;
+    }
     if (event.target.closest('.menu__info') || event.target.closest('.menu__info-panel')) {
       return;
     }
@@ -876,13 +945,26 @@ const createMenuItem = (item, category) => {
     }
 
     let targetKey = key;
+    const modifiers = [];
+    const notes = [];
+    let priceExtra = 0;
     if (glutenInput && glutenInput.checked) {
-      targetKey = `${key}::gluten`;
+      modifiers.push('gluten');
+      notes.push('Senza glutine');
+      priceExtra += 1;
+    }
+    if (lactoseInput && lactoseInput.checked) {
+      modifiers.push('lactose');
+      notes.push('Senza lattosio');
+    }
+
+    if (modifiers.length) {
+      targetKey = `${key}::${modifiers.join('::')}`;
       if (!menuItems.has(targetKey)) {
         menuItems.set(targetKey, {
           ...item,
-          prezzo: basePrice + 1,
-          customNote: 'Senza glutine',
+          prezzo: basePrice + priceExtra,
+          customNote: notes.join(' | '),
           category: category.categoria,
           baseKey: key,
         });
@@ -1096,10 +1178,6 @@ const updateCartUI = () => {
       const remove = document.createElement('button');
       remove.type = 'button';
       remove.className = 'order__remove';
-      const removeIcon = createIcon('remove', 'icon icon--xs');
-      if (removeIcon) {
-        remove.appendChild(removeIcon);
-      }
       remove.append('Rimuovi');
       remove.addEventListener('click', () => removeFromCart(entry.key));
 
@@ -1496,8 +1574,20 @@ const setSearchPanelOpen = (isOpen) => {
   }
   searchPanel.classList.toggle('is-open', isOpen);
   searchToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  if (searchToggleLabelEl) {
+    searchToggleLabelEl.textContent = isOpen ? searchToggleLabelOpen : searchToggleLabelClosed;
+  }
+  searchToggle.classList.toggle('is-active', isOpen);
   if (isOpen && searchInput) {
     searchInput.focus();
+  }
+  if (!isOpen) {
+    if (searchInput) {
+      searchInput.value = '';
+      searchInput.blur();
+    }
+    searchQuery = '';
+    applyFilters();
   }
 };
 
@@ -1547,6 +1637,9 @@ const buildModalItem = (type, state) => {
     if (values.glutenfree && values.glutenfree.items.length) {
       notes.push('Impasto senza glutine');
     }
+    if (values.lactosefree && values.lactosefree.items.length) {
+      notes.push('Senza lattosio');
+    }
   }
 
   if (type === 'calzone') {
@@ -1557,6 +1650,9 @@ const buildModalItem = (type, state) => {
     }
     if (values.glutenfree && values.glutenfree.items.length) {
       notes.push('Impasto senza glutine');
+    }
+    if (values.lactosefree && values.lactosefree.items.length) {
+      notes.push('Senza lattosio');
     }
   }
 

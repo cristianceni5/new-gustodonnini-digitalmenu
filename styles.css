@@ -71,7 +71,7 @@
   --menu-card-border: var(--line);
   --menu-card-shadow: 0 14px 28px var(--shadow-soft);
   --menu-card-width: 158px;
-  --menu-card-height: 275px;
+  --menu-card-height: 300px;
   --menu-card-media-height: 130px;
   --menu-placeholder-bg: var(--gray-200);
   --menu-placeholder-text: var(--gray-700);
@@ -245,6 +245,42 @@
   --staff-field-text: #f7efe4;
 }
 
+.theme-oceano {
+  --white: #f7fbff;
+  --black: #0b1b2a;
+  --gray-900: #0b1b2a;
+  --gray-700: #3d5566;
+  --gray-300: #c8d7e2;
+  --gray-200: #e3edf4;
+  --gray-100: #f0f6fb;
+  --paper: #f0f6fb;
+  --ink: #0b1b2a;
+  --ink-soft: #3d5566;
+  --line: #c8d7e2;
+  --card: #f7fbff;
+  --shadow: rgba(11, 27, 42, 0.16);
+  --shadow-soft: rgba(11, 27, 42, 0.08);
+  --accent: #0f6b9e;
+  --accent-dark: #0b4e74;
+  --accent-contrast: #ffffff;
+  --accent-soft: #e6f3fb;
+  --accent-soft-border: #bfe3f6;
+  --accent-muted: #0b4e74;
+  --whatsapp: #158a63;
+  --whatsapp-dark: #0f6f4f;
+  --filters-bg: rgba(240, 246, 251, 0.95);
+  --quickbar-bg: rgba(11, 27, 42, 0.92);
+  --modal-overlay: rgba(6, 16, 26, 0.6);
+  --backdrop-glow-1: rgba(230, 245, 255, 0.95);
+  --backdrop-glow-2: rgba(185, 223, 245, 0.7);
+  --backdrop-base-start: #f0f6fb;
+  --backdrop-base-end: #e3edf4;
+  --order-staff-border: #133147;
+  --staff-field-bg: #102a3d;
+  --staff-field-border: #1b3f5a;
+  --staff-field-text: #eaf4fb;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -260,7 +296,7 @@ body {
   color: var(--ink);
   background: var(--paper);
   min-height: 100vh;
-  padding-bottom: 5.5rem;
+  padding-bottom: calc(5.5rem + env(safe-area-inset-bottom, 0px));
 }
 
 button,
@@ -325,14 +361,8 @@ img {
   width: 1em;
   height: 1em;
   display: inline-block;
-  background-color: currentColor;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  -webkit-mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: contain;
   flex-shrink: 0;
+  object-fit: contain;
 }
 
 .icon--sm {
@@ -343,51 +373,6 @@ img {
 .icon--xs {
   width: 0.9em;
   height: 0.9em;
-}
-
-.icon--map {
-  -webkit-mask-image: url("img/icone e loghi/maps.svg");
-  mask-image: url("img/icone e loghi/maps.svg");
-}
-
-.icon--ping {
-  -webkit-mask-image: url("img/icone e loghi/PING.SVG");
-  mask-image: url("img/icone e loghi/PING.SVG");
-}
-
-.icon--menu {
-  -webkit-mask-image: url("img/icone e loghi/menu.svg");
-  mask-image: url("img/icone e loghi/menu.svg");
-}
-
-.icon--ordini {
-  -webkit-mask-image: url("img/icone e loghi/ordini.svg");
-  mask-image: url("img/icone e loghi/ordini.svg");
-}
-
-.icon--privato {
-  -webkit-mask-image: url("img/icone e loghi/privato.svg");
-  mask-image: url("img/icone e loghi/privato.svg");
-}
-
-.icon--invia {
-  -webkit-mask-image: url("img/icone e loghi/invia.svg");
-  mask-image: url("img/icone e loghi/invia.svg");
-}
-
-.icon--glutine {
-  -webkit-mask-image: url("img/icone e loghi/glutine.svg");
-  mask-image: url("img/icone e loghi/glutine.svg");
-}
-
-.icon--remove {
-  -webkit-mask-image: url("img/icone e loghi/delete.svg");
-  mask-image: url("img/icone e loghi/delete.svg");
-}
-
-.icon--ordineinviato {
-  -webkit-mask-image: url("img/icone e loghi/ordineinviato.svg");
-  mask-image: url("img/icone e loghi/ordineinviato.svg");
 }
 
 .backdrop {
@@ -751,6 +736,9 @@ strong {
 }
 
 .filters__search-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   border: 1px solid var(--chip-border);
   background: var(--chip-bg);
   color: var(--chip-text);
@@ -768,11 +756,22 @@ strong {
   color: var(--accent);
 }
 
+.filters__search-toggle.is-active:hover,
+.filters__search-toggle[aria-expanded="true"]:hover {
+  border-color: var(--chip-active-border);
+  color: var(--chip-active-text);
+}
+
+.filters__search-toggle.is-active .icon,
+.filters__search-toggle[aria-expanded="true"] .icon {
+  filter: brightness(0) invert(1);
+}
+
 .filters__search-panel {
   position: fixed;
   left: 0;
   right: 0;
-  bottom: 5.2rem;
+  bottom: calc(5.2rem + env(safe-area-inset-bottom, 0px));
   display: none;
   align-items: center;
   gap: 0.6rem;
@@ -1026,7 +1025,7 @@ strong {
 }
 
 .menu__content {
-  padding: 0.9rem 1rem 4.2rem;
+  padding: 0.9rem 1rem 5.8rem;
   display: flex;
   flex-direction: column;
   gap: 0.45rem;
@@ -1052,7 +1051,8 @@ strong {
   overflow: hidden;
 }
 
-.menu__gluten {
+.menu__gluten,
+.menu__lactose {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -1065,29 +1065,36 @@ strong {
   bottom: 2.9rem;
 }
 
-.menu__gluten-input {
+.menu__lactose.menu__lactose--stacked {
+  bottom: 4.35rem;
+}
+
+.menu__gluten-input,
+.menu__lactose-input {
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
 
-.menu__gluten span {
+.menu__gluten span,
+.menu__lactose span {
   display: inline-flex;
   align-items: center;
   justify-content: flex-start;
   gap: 0.3rem;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: var(--toggle-text);
   border: 1px solid var(--toggle-border);
   background: var(--toggle-bg);
   border-radius: 999px;
-  padding: 0.3rem 0.5rem;
+  padding: 0.22rem 0.45rem;
   transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
   white-space: nowrap;
 }
 
 
-.menu__gluten-input:checked + span {
+.menu__gluten-input:checked + span,
+.menu__lactose-input:checked + span {
   background: var(--toggle-active-bg);
   border-color: var(--toggle-active-border);
   color: var(--toggle-active-text);
@@ -1579,7 +1586,7 @@ strong {
 }
 
 .footer__themes {
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 .footer__themes .theme-selector {
@@ -1592,7 +1599,10 @@ strong {
 }
 
 .footer__credit {
-  grid-column: 1 / -1;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
   text-align: center;
   margin-top: 1.5rem;
   font-size: 0.8rem;
@@ -1602,7 +1612,7 @@ strong {
 .quickbar {
   position: fixed;
   right: 1.5rem;
-  bottom: 1.5rem;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
   background: var(--quickbar-bg);
   color: var(--quickbar-text);
   border-radius: 999px;
@@ -1884,7 +1894,7 @@ body.is-locked {
   }
 
   .filters__search-panel {
-    bottom: 6.6rem;
+    bottom: calc(6.6rem + env(safe-area-inset-bottom, 0px));
   }
 
   .filters__search-panel input {
