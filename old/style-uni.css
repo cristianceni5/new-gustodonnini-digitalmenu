@@ -590,7 +590,7 @@ button::after{
 
 .gluten-free-checkbox:checked {
     background-color: var(--col-buttokgen);
-    background-image: url('img/icone e loghi/checked.png');
+    background-image: url('img/icone%20e%20loghi/checked.png');
     background-position: center;
     background-size: 85%;
     

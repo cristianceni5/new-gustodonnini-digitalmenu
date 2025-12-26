@@ -275,7 +275,7 @@ function updateOrderList() {
         li.innerHTML = `
             <span class="order-product-name">${entry.item}: <b>€${entry.price.toFixed(2)}</b></span>
             <button onclick="removeFromOrder(${index})" class="button-remove">
-                <img src="img/icone e loghi/remove.png" alt="Rimuovi" class="butt-img"> Elimina
+                <img src="img/icone%20e%20loghi/remove.png" alt="Rimuovi" class="butt-img"> Elimina
             </button>
         `;
 

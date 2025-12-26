@@ -183,14 +183,14 @@
       <p class="modal__subtitle" data-modal-subtitle></p>
       <div class="modal__body" data-modal-body></div>
       <div class="modal__footer">
-        <label class="field field--inline">
-          <span>Quantita</span>
+        <div class="field field--inline">
+          <span id="modal-qty-label">Quantità</span>
           <div class="qty-stepper">
-            <button class="qty-button" type="button" data-qty-step="-1" aria-label="Diminuisci quantita">-</button>
-            <input type="number" min="1" value="1" data-modal-qty>
-            <button class="qty-button" type="button" data-qty-step="1" aria-label="Aumenta quantita">+</button>
+            <button class="qty-button" type="button" data-qty-step="-1" aria-label="Diminuisci quantità">-</button>
+            <input type="number" min="1" value="1" data-modal-qty aria-labelledby="modal-qty-label">
+            <button class="qty-button" type="button" data-qty-step="1" aria-label="Aumenta quantità">+</button>
           </div>
-        </label>
+        </div>
         <div class="modal__total">
           <span>Totale</span>
           <strong data-modal-total>€ 0,00</strong>

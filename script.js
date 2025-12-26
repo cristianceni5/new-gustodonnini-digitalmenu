@@ -1,3 +1,5 @@
+// Developed by Cristian Ceni 2025, all the rights are reserved
+
 const menuData = Array.isArray(window.menu)
   ? window.menu
   : typeof menu !== 'undefined' && Array.isArray(menu)
@@ -58,6 +60,29 @@ const modalTotalEl = document.querySelector('[data-modal-total]');
 const modalQtyEl = document.querySelector('[data-modal-qty]');
 const modalAddButton = document.querySelector('[data-modal-add]');
 const modalCloseButtons = document.querySelectorAll('[data-modal-close]');
+
+const scrollToTopInstant = () => {
+  const root = document.documentElement;
+  const prev = root.style.scrollBehavior;
+  root.style.scrollBehavior = 'auto';
+  window.scrollTo(0, 0);
+  root.style.scrollBehavior = prev;
+};
+
+const forceStartAtTop = () => {
+  if (location.hash) {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+  scrollToTopInstant();
+};
+
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual';
+}
+
+window.addEventListener('pageshow', () => {
+  forceStartAtTop();
+});
 
 const cart = new Map();
 const menuItems = new Map();
@@ -541,6 +566,105 @@ const formatItemLabel = (item) => {
     }
   }
   return `${baseName} - ${note}`;
+};
+
+const shortenOrderLabel = (label, maxLength = 56) => {
+  const text = String(label || '')
+    .replace(/\s+/g, ' ')
+    .replace(/^ingredienti:\s*/i, 'Ingredienti: ')
+    .trim();
+  if (!text) {
+    return '';
+  }
+  if (text.length <= maxLength) {
+    return text;
+  }
+
+  const stopWords = new Set([
+    'e',
+    'ed',
+    'con',
+    'senza',
+    'di',
+    'del',
+    'della',
+    'dello',
+    'dei',
+    'degli',
+    'delle',
+    'al',
+    'allo',
+    'alla',
+    'ai',
+    'agli',
+    'alle',
+    'da',
+    'in',
+    'su',
+    'per',
+    'il',
+    'lo',
+    'la',
+    'i',
+    'gli',
+    'le',
+  ]);
+
+  const abbreviations = new Map([
+    ['ingredienti:', 'Ing.'],
+    ['salsiccia', 'sals.'],
+    ['friarielli', 'friar.'],
+    ['prosciutto', 'prosc.'],
+    ['mozzarella', 'mozz.'],
+    ['pomodoro', 'pomod.'],
+    ['funghi', 'fung.'],
+    ['peperoni', 'peper.'],
+    ['cipolla', 'cipol.'],
+    ['patatine', 'patat.'],
+    ['melanzane', 'melan.'],
+    ['zucchine', 'zucc.'],
+    ['wurstel', 'wurst.'],
+  ]);
+
+  const abbreviateToken = (token) => {
+    const match = token.match(/^(.+?)([.,;:!?)]*)$/);
+    const word = match ? match[1] : token;
+    const punctuation = match ? match[2] : '';
+    const normalized = word.toLowerCase();
+    if (abbreviations.has(normalized)) {
+      return `${abbreviations.get(normalized)}${punctuation}`;
+    }
+    if (word.length <= 4) {
+      return `${word}${punctuation}`;
+    }
+    if (word.length <= 7) {
+      return `${word.slice(0, 4)}.${punctuation}`;
+    }
+    return `${word.slice(0, 5)}.${punctuation}`;
+  };
+
+  const tokens = text.split(' ');
+  const out = [];
+  for (const token of tokens) {
+    const normalized = token.toLowerCase().replace(/[.,;:!?)]*$/g, '');
+    if (out.length > 1 && stopWords.has(normalized)) {
+      continue;
+    }
+    out.push(abbreviateToken(token));
+    const built = out.join(' ');
+    if (built.length >= maxLength) {
+      break;
+    }
+  }
+
+  let result = out.join(' ').trim();
+  if (result.length > maxLength) {
+    result = result.slice(0, Math.max(0, maxLength - 1)).trimEnd();
+  }
+  if (!result.endsWith('…')) {
+    result = `${result}…`;
+  }
+  return result;
 };
 
 const groupCartItems = (entries) => {
@@ -1154,7 +1278,9 @@ const updateCartUI = () => {
 
       const label = document.createElement('span');
       label.className = 'order__label';
-      label.textContent = formatItemLabel(entry.item);
+      const fullLabel = formatItemLabel(entry.item);
+      label.textContent = shortenOrderLabel(fullLabel);
+      label.title = fullLabel;
 
       detail.appendChild(qty);
       detail.appendChild(label);
@@ -1689,16 +1815,41 @@ const adjustQtyInput = (button) => {
     return;
   }
   const min = Math.max(1, Number(input.min) || 1);
-  const max = Number(input.max);
+  const rawMax = input.max;
+  const max = rawMax === '' ? null : Number(rawMax);
   const stepSize = Number(input.step) || 1;
   const current = Number(input.value) || min;
   let next = current + step * stepSize;
   next = Math.max(min, next);
-  if (Number.isFinite(max)) {
+  if (max !== null && Number.isFinite(max)) {
     next = Math.min(max, next);
   }
   input.value = String(next);
   input.dispatchEvent(new Event('input', { bubbles: true }));
+  syncQtyStepper(input);
+};
+
+const syncQtyStepper = (input) => {
+  if (!input) {
+    return;
+  }
+  const wrapper = input.closest('.qty-stepper');
+  if (!wrapper) {
+    return;
+  }
+  const min = Math.max(1, Number(input.min) || 1);
+  const rawMax = input.max;
+  const max = rawMax === '' ? null : Number(rawMax);
+  const value = Number(input.value) || min;
+  const downButton = wrapper.querySelector('[data-qty-step="-1"], [data-qty-step="down"]');
+  const upButton = wrapper.querySelector('[data-qty-step="1"], [data-qty-step="up"]');
+
+  if (downButton) {
+    downButton.disabled = value <= min;
+  }
+  if (upButton) {
+    upButton.disabled = max !== null && Number.isFinite(max) ? value >= max : false;
+  }
 };
 
 const buildModalItem = (type, state) => {
@@ -1814,6 +1965,7 @@ const openModal = (type) => {
 
   if (modalQtyEl) {
     modalQtyEl.value = 1;
+    syncQtyStepper(modalQtyEl);
   }
 
   updateModalTotal();
@@ -1951,7 +2103,14 @@ const init = () => {
   }
 
   if (modalQtyEl) {
-    modalQtyEl.addEventListener('input', updateModalTotal);
+    modalQtyEl.addEventListener('input', (event) => {
+      syncQtyStepper(event.target);
+      updateModalTotal();
+    });
+    modalQtyEl.addEventListener('change', (event) => {
+      syncQtyStepper(event.target);
+      updateModalTotal();
+    });
   }
 
   if (modalAddButton) {

@@ -1,3 +1,5 @@
+/* Developed by Cristian Ceni 2025, all the rights are reserved */
+
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
 
 :root {
@@ -311,11 +313,26 @@ textarea {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  flex-wrap: nowrap;
+  max-width: 100%;
 }
 
-.qty-stepper input[type="number"] {
-  width: 3.2rem;
+.field .qty-stepper input[type="number"] {
+  width: 3.4rem;
   text-align: center;
+  box-sizing: border-box;
+  padding: 0.35rem 0.45rem;
+  border-radius: 999px;
+}
+
+.field .qty-stepper input[type="number"]::-webkit-outer-spin-button,
+.field .qty-stepper input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.field .qty-stepper input[type="number"] {
+  appearance: textfield;
 }
 
 .qty-button {
@@ -970,6 +987,8 @@ strong {
   width: calc(100% - 1.2rem);
   max-height: 140px;
   overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   background: var(--card);
   border: 1px solid var(--line);
   border-radius: 12px;
@@ -984,6 +1003,11 @@ strong {
   z-index: 2;
   display: grid;
   gap: 0.45rem;
+}
+
+.menu__info-panel::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .menu__info-text {
@@ -1281,10 +1305,11 @@ strong {
 }
 
 .order__item {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: 1rem;
+  row-gap: 0.35rem;
 }
 
 .order__detail {
@@ -1292,7 +1317,7 @@ strong {
   flex: 1;
   min-width: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.6rem;
 }
 
@@ -1313,10 +1338,19 @@ strong {
 }
 
 .order__label {
+  display: block;
+  flex: 1 1 auto;
   min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  max-width: 100%;
+  line-height: 1.25;
+  max-height: 2.5em;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .order__item-meta {
@@ -1405,7 +1439,7 @@ strong {
 }
 
 .field--inline {
-  grid-template-columns: auto minmax(80px, 120px);
+  grid-template-columns: auto minmax(140px, 1fr);
   align-items: center;
   gap: 0.6rem;
 }
@@ -1719,8 +1753,15 @@ strong {
   width: min(720px, 92vw);
   max-height: 90vh;
   overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   box-shadow: var(--modal-shadow);
   z-index: 1;
+}
+
+.modal__panel::-webkit-scrollbar {
+  width: 0;
+  height: 0;
 }
 
 .modal__close {
