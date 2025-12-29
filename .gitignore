@@ -1,4 +1,5 @@
 .local_backup/
 .tmp_github_update/
 .tmp_push/
+.tmp_git_push/
 .DS_Store

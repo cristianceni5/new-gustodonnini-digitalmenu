@@ -154,6 +154,7 @@ const ingredientOptions = [
   { value: 'prosciutto-crudo', label: 'Prosc. crudo' },
   { value: 'salsiccia', label: 'Salsiccia' },
   { value: 'salamino', label: 'Salamino' },
+  { value: 'nduja', label: "N'duja" },
   { value: 'wurstel', label: 'Wurstel' },
   { value: 'pancetta', label: 'Pancetta' },
   { value: 'speck', label: 'Speck' },
@@ -167,6 +168,7 @@ const ingredientOptions = [
   { value: 'zucchine', label: 'Zucchine' },
   { value: 'melanzane', label: 'Melanzane' },
   { value: 'gorgonzola', label: 'Gorgonzola' },
+  { value: 'grana', label: 'Grana' },
   { value: 'rucola', label: 'Rucola' },
   { value: 'pomodorini', label: 'Pomodorini' },
 ];
@@ -181,7 +183,7 @@ const customizationConfigs = {
         label: 'Base',
         type: 'select',
         required: true,
-        defaultValue: 'covaccino',
+        defaultValue: 'margherita',
         options: [
           { value: 'covaccino', label: 'Covaccino', price: 5 },
           { value: 'bianca', label: 'Bianca', price: 6 },
