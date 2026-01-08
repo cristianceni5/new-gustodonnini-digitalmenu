@@ -1,4 +1,4 @@
-const menu = [ //Menù completo 11/08/2025
+const menu = [ //Menù completo 08/01/2026
     {
         categoria: "Legenda Allergeni",
         prodotti: []
@@ -20,15 +20,16 @@ const menu = [ //Menù completo 11/08/2025
     {
         categoria: "Bevande",
         prodotti: [
-            { nome: "Acqua naturale", prezzo: 1, descrizione:"1 litro o 1/2 litro", immagine: "img/bevande/acquanat.png", allergeni: [] },
-            { nome: "Acqua frizzante", prezzo: 1, descrizione:"1 litro o 1/2 litro", immagine: "img/bevande/acquafrizz.png", allergeni: [] },
+            { nome: "Acqua naturale", prezzo: 1.5, descrizione:"1 litro o 1/2 litro", immagine: "img/bevande/acquanat.png", allergeni: [] },
+            { nome: "Acqua frizzante", prezzo: 1.5, descrizione:"1 litro o 1/2 litro", immagine: "img/bevande/acquafrizz.png", allergeni: [] },
             { nome: "Succo di frutta", prezzo: 2, descrizione:"specifica il gusto nelle note", immagine: "img/bevande/succhino.png", allergeni: [] },
             { nome: "Sanbitter (liscio)", prezzo: 2.50, immagine: "img/bevande/bitter.png", allergeni: [] },
             { nome: "Crodino (liscio)", prezzo: 2.50, immagine: "img/bevande/crodinoo.png", allergeni: [] },
             { nome: "Campari Soda (liscio)", prezzo: 3, immagine: "img/bevande/campari.png", allergeni: [] },
-            { nome: "Estathè pesca", prezzo: 1.2, immagine: "img/bevande/estapesca.png", allergeni: [] },
-            { nome: "Estathè limone", prezzo: 1.2, immagine: "img/bevande/estalimone.png", allergeni: [] },
+            { nome: "Estathè pesca", prezzo: 1.5, immagine: "img/bevande/estapesca.png", allergeni: [] },
+            { nome: "Estathè limone", prezzo: 1.5, immagine: "img/bevande/estalimone.png", allergeni: [] },
             { nome: "Varie in bottiglia", prezzo: 2.5, immagine: "img/bevande/cocafanta.png", allergeni: [] },
+            { nome: "RedBull", prezzo: 3, immagine: "img/bevande/redbull.png", allergeni: [] },
             { nome: "Coca alla spina (piccola)", prezzo: 2.5, immagine: "img/bevande/cocaspinapiccola.png", allergeni: [] },
             { nome: "Coca alla spina (media)", prezzo: 3.5, immagine: "img/bevande/cocaspinamedia.png", allergeni: [] },
             { nome: "Birra analcolica", prezzo: 3.5, immagine: "img/bevande/analcolica.png", allergeni: [] },
@@ -41,14 +42,14 @@ const menu = [ //Menù completo 11/08/2025
             { nome: "Birra alla spina rossa (piccola)", prezzo: 2.5, immagine: "img/birre/birrarossapiccina.png", allergeni: [] },
             { nome: "Birra alla spina bionda (media)", prezzo: 3.5, immagine: "img/birre/birramedia.png", allergeni: [] },
             { nome: "Birra alla spina rossa (media)", prezzo: 3.5, immagine: "img/birre/birrarossamedia.png", allergeni: [] },
-            { nome: "Birra Corona", prezzo: 2.5, immagine: "img/birre/corona.png", allergeni: [] },
-            { nome: "Birra Moretti", prezzo: 2.5, immagine: "img/birre/moretti.png", allergeni: [] },
-            { nome: "Birra Icnusa non filtata", prezzo: 3.5, immagine: "img/birre/ichnusa.png", allergeni: [] },
+            { nome: "Birra Corona", prezzo: 3.5, immagine: "img/birre/corona.png", allergeni: [] },
+            { nome: "Birra Moretti", prezzo: 3, immagine: "img/birre/moretti.png", allergeni: [] },
+            { nome: "Birra Icnusa non filtata", prezzo: 4, immagine: "img/birre/ichnusa.png", allergeni: [] },
             { nome: "Birra Becks", prezzo: 2.5, immagine: "img/birre/becks.png", allergeni: [] },
-            { nome: "Birra Ceres", prezzo: 3.5, immagine: "img/birre/ceres.png", allergeni: [] },
-            { nome: "Birra Tennent's", prezzo: 3, immagine: "img/birre/tennents.png", allergeni: [] },
-            { nome: "Birra Menabrea", prezzo: 3.50, immagine: "img/birre/menabrea.png", allergeni: [] },
-            { nome: "Birra senza glutine", prezzo: 3.5, immagine: "img/birre/glutine.png", allergeni: [] },
+            { nome: "Birra Ceres", prezzo: 4, immagine: "img/birre/ceres.png", allergeni: [] },
+            { nome: "Birra Tennent's", prezzo: 3.5, immagine: "img/birre/tennents.png", allergeni: [] },
+            { nome: "Birra Menabrea", prezzo: 4, immagine: "img/birre/menabrea.png", allergeni: [] },
+            { nome: "Birra senza glutine", prezzo: 4, immagine: "img/birre/glutine.png", allergeni: [] },
             { nome: "Eva - Blond Ale", prezzo: 8, descrizione:"Alc. <b>5,0%</b> - <b>50 cl</b>", immagine: "img/birre/eva.png", allergeni: [] },
             { nome: "Honey - Honey Ale", prezzo: 6, descrizione:"Alc. <b>6,3%</b> - <b>33 cl</b>", immagine: "img/birre/honey.png", allergeni: [] },
             { nome: "Saudade - India Pale Ale", prezzo: 6, descrizione:"Alc. <b>5,5%</b> - <b>33 cl</b>", immagine: "img/birre/saudade.png", allergeni: [] },
