@@ -396,7 +396,7 @@ const customizationConfigs = {
         required: true,
         defaultValue: 'mezzo',
         options: [
-          { value: 'mezzo', label: '1/2 litro', price: 1 },
+          { value: 'mezzo', label: '1/2 litro', price: 1.5 },
           { value: 'litro', label: '1 litro', price: 2 },
         ],
       },
