@@ -169,6 +169,8 @@ const ingredientOptions = [
   { value: 'melanzane', label: 'Melanzane' },
   { value: 'gorgonzola', label: 'Gorgonzola' },
   { value: 'grana', label: 'Grana' },
+  { value: 'pecorino', label: 'Pecorino' },
+  { value: 'pere', label: 'Pere' },
   { value: 'rucola', label: 'Rucola' },
   { value: 'pomodorini', label: 'Pomodorini' },
 ];
@@ -397,7 +399,7 @@ const customizationConfigs = {
         defaultValue: 'mezzo',
         options: [
           { value: 'mezzo', label: '1/2 litro', price: 1.5 },
-          { value: 'litro', label: '1 litro', price: 2 },
+          { value: 'litro', label: '1 litro', price: 2.5 },
         ],
       },
     ],
@@ -413,8 +415,8 @@ const customizationConfigs = {
         required: true,
         defaultValue: 'mezzo',
         options: [
-          { value: 'mezzo', label: '1/2 litro', price: 1 },
-          { value: 'litro', label: '1 litro', price: 2 },
+          { value: 'mezzo', label: '1/2 litro', price: 1.5 },
+          { value: 'litro', label: '1 litro', price: 2.5 },
         ],
       },
     ],

@@ -44,7 +44,7 @@ const menu = [ //Menù completo 08/01/2026
             { nome: "Birra alla spina rossa (media)", prezzo: 3.5, immagine: "img/birre/birrarossamedia.png", allergeni: [] },
             { nome: "Birra Corona", prezzo: 3.5, immagine: "img/birre/corona.png", allergeni: [] },
             { nome: "Birra Moretti", prezzo: 3, immagine: "img/birre/moretti.png", allergeni: [] },
-            { nome: "Birra Icnusa non filtata", prezzo: 4, immagine: "img/birre/ichnusa.png", allergeni: [] },
+            { nome: "Birra Ichnusa non filtrata", prezzo: 4, immagine: "img/birre/ichnusa.png", allergeni: [] },
             { nome: "Birra Becks", prezzo: 2.5, immagine: "img/birre/becks.png", allergeni: [] },
             { nome: "Birra Ceres", prezzo: 4, immagine: "img/birre/ceres.png", allergeni: [] },
             { nome: "Birra Tennent's", prezzo: 3.5, immagine: "img/birre/tennents.png", allergeni: [] },
@@ -63,12 +63,12 @@ const menu = [ //Menù completo 08/01/2026
     {
         categoria: "Alcolici e cocktail",
         prodotti: [
-            { nome: "Vino (bottiglia, calice)", prezzo: 3.5, descrizione: "scegli tu il tipo. <b><br>Il prezzo può variare</p></b>", immagine: "img/bevande/vino.png", allergeni: [] },
+            { nome: "Vino (bottiglia, calice)", prezzo: 3.5, descrizione: "scegli tu il tipo.<br><strong>Il prezzo può variare</strong>", immagine: "img/bevande/vino.png", allergeni: [] },
             { nome: "Aperol Spritz", prezzo: 4, immagine: "img/bevande/apespritz.png", allergeni: [] },
             { nome: "Campari Spritz", prezzo: 4, immagine: "img/bevande/camparispritz.png", allergeni: [] },
             { nome: "Negroni", prezzo: 4, immagine: "img/bevande/negroni.png", allergeni: [] },
             { nome: "Americano", prezzo: 4, immagine: "img/bevande/negroni.png", allergeni: [] },
-            { nome: "Gin Tonic", prezzo: 5, descrizione: "scegli tu il Gin. <b><br>Il prezzo può variare</p></b>", immagine: "img/bevande/gintonic.png", allergeni: [] },
+            { nome: "Gin Tonic", prezzo: 5, descrizione: "scegli tu il Gin.<br><strong>Il prezzo può variare</strong>", immagine: "img/bevande/gintonic.png", allergeni: [] },
             { nome: "Vodka Tonic", prezzo: 4, immagine: "img/bevande/gintonic.png", allergeni: [] },
             { nome: "Sanbitter (corretto)", prezzo: 3, immagine: "img/bevande/bitter.png", allergeni: [] },
             { nome: "Crodino (corretto)", prezzo: 3, immagine: "img/bevande/crodinoo.png", allergeni: [] },
@@ -117,7 +117,7 @@ const menu = [ //Menù completo 08/01/2026
     {
         categoria: "Pizze",
         prodotti: [
-            { nome: "Personalizzata", prezzo: 6, descrizione: "scegli tu gli ingredienti. <b><br>Il prezzo può variare</p></b>", immagine: "img/pizze/pizzapers.png", allergeni: [] },
+            { nome: "Personalizzata", prezzo: 6, descrizione: "scegli tu gli ingredienti.<br><strong>Il prezzo può variare</strong>", immagine: "img/pizze/pizzapers.png", allergeni: [] },
             { nome: "Margherita", prezzo: 6, descrizione: "pomodoro, mozzarella, basilico.", immagine: "img/pizze/marghe.jpg", allergeni: ["glutine", "latte"] },
             { nome: "Marinara", prezzo: 6, descrizione: "pomodoro, aglio.", immagine: "img/pizze/marina.jpeg", allergeni: ["glutine"] },
             { nome: "Napoli", prezzo: 8, descrizione: "pomodoro, mozzarella, acciughe, capperi.", immagine: "img/pizze/napoli.jpg", allergeni: ["glutine", "latte", "pesce"] },
@@ -130,6 +130,7 @@ const menu = [ //Menù completo 08/01/2026
             { nome: "Capricciosa", prezzo: 8, descrizione: "pomodoro, mozzarella, olive, carciofi, funghi, prosciutto cotto.", immagine: "img/pizze/quattro.jpg", allergeni: ["glutine", "latte"] },
             { nome: "Salamino piccante", prezzo: 7.50, descrizione: "pomodoro, mozzarella, salamino piccante.", immagine: "img/pizze/salamino.jpg", allergeni: ["glutine", "latte", "piccante"] },
             { nome: "Gorgonzola e peperoncino", prezzo: 7.50, descrizione: "pomodoro, mozzarella, gorgonzola, peperoncino.", immagine: "img/pizze/gorgo.jpg", allergeni: ["glutine", "latte", "piccante"] },
+            { nome: "Quattro formaggi", prezzo: 9, descrizione: "mozzarella, gorgonzola, brie, pecorino.", immagine: "img/pizze/formaggi.png", allergeni: ["glutine", "latte"] },
             { nome: "Speck, Brie e porcini", prezzo: 9.00, descrizione: "pomodoro, mozzarella, speck, Brie, porcini.", immagine: "img/pizze/speckporc.jpg", allergeni: ["glutine", "latte"] },
             { nome: "Vegetariana", prezzo: 8, descrizione: "pomodoro, mozzarella, verdure.", immagine: "img/pizze/veg.jpg", allergeni: ["glutine", "latte"] },
             { nome: "Maialona", prezzo: 9, descrizione: "pomodoro, mozzarella, wurstel, salsiccia, salamino piccante, prosciutto cotto.", immagine: "img/pizze/maiala.jpg", allergeni: ["glutine", "latte"] },
@@ -152,7 +153,7 @@ const menu = [ //Menù completo 08/01/2026
     {
         categoria: "Calzoni",
         prodotti: [
-            { nome: "Personalizzato", prezzo: 8.50, descrizione: "scegli tu gli ingredienti. <b><br>Il prezzo può variare</p></b>", immagine: "img/calzoni/personalizzato.png", allergeni: [] },
+            { nome: "Personalizzato", prezzo: 8.50, descrizione: "scegli tu gli ingredienti.<br><strong>Il prezzo può variare</strong>", immagine: "img/calzoni/personalizzato.png", allergeni: [] },
             { nome: "Classico", prezzo: 8.50, descrizione: "pomodoro, mozzarella, prosciutto cotto.", immagine: "img/calzoni/classico.jpg", allergeni: ["glutine", "latte"] },
             { nome: "Farcito", prezzo: 9, descrizione: "pomodoro, mozzarella, prosciutto cotto, funghi, salsiccia.", immagine: "img/calzoni/classico.jpg", allergeni: ["glutine", "latte"] },
             { nome: "Calzino", prezzo: 9, descrizione: "mozzarella, salsiccia, porri.", immagine: "img/calzoni/classico.jpg", allergeni: ["glutine", "latte"] },
