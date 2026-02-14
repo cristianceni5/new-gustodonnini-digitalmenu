@@ -100,6 +100,7 @@ const themeClasses = Array.from(themeButtons)
 let activeFilter = 'all';
 let searchQuery = '';
 let activeModalType = null;
+let activeModalContext = null;
 let searchPanelBottomOffset = 0;
 
 const applyTheme = (theme) => {
@@ -178,7 +179,8 @@ const ingredientOptions = [
 const customizationConfigs = {
   pizza: {
     title: 'Pizza personalizzata',
-    subtitle: 'Base covaccino, bianca, rossa  o margherita. Ingredienti extra: € 1 ciascuno. Senza lattosio: nessun supplemento.',
+    subtitle:
+      'Base covaccino, bianca, rossa o margherita. Ingredienti extra: € 1 ciascuno. Impasto integrale o senza glutine: € 1. Senza lattosio: nessun supplemento.',
     fields: [
       {
         id: 'base',
@@ -201,11 +203,16 @@ const customizationConfigs = {
         options: ingredientOptions,
       },
       {
-        id: 'glutenfree',
-        label: 'Impasto senza glutine (€ 1)',
-        type: 'checkbox',
-        pricePerItem: 1,
-        options: [{ value: 'senza-glutine', label: 'Senza glutine' }],
+        id: 'dough',
+        label: 'Impasto',
+        type: 'radio',
+        required: false,
+        defaultValue: 'standard',
+        options: [
+          { value: 'standard', label: 'Standard' },
+          { value: 'integrale', label: 'Integrale +1€', price: 1 },
+          { value: 'senza-glutine', label: 'Senza glutine +1€', price: 1 },
+        ],
       },
       {
         id: 'lactosefree',
@@ -224,7 +231,8 @@ const customizationConfigs = {
   },
   calzone: {
     title: 'Calzone personalizzato',
-    subtitle: 'Ripieno a scelta. Ingredienti extra: € 1 ciascuno. Senza lattosio: nessun supplemento.',
+    subtitle:
+      'Ripieno a scelta. Ingredienti extra: € 1 ciascuno. Impasto integrale o senza glutine: € 1. Senza lattosio: nessun supplemento.',
     fields: [
       {
         id: 'base',
@@ -242,11 +250,16 @@ const customizationConfigs = {
         options: ingredientOptions,
       },
       {
-        id: 'glutenfree',
-        label: 'Impasto senza glutine (€ 1)',
-        type: 'checkbox',
-        pricePerItem: 1,
-        options: [{ value: 'senza-glutine', label: 'Senza glutine' }],
+        id: 'dough',
+        label: 'Impasto',
+        type: 'radio',
+        required: false,
+        defaultValue: 'standard',
+        options: [
+          { value: 'standard', label: 'Standard' },
+          { value: 'integrale', label: 'Integrale +1€', price: 1 },
+          { value: 'senza-glutine', label: 'Senza glutine +1€', price: 1 },
+        ],
       },
       {
         id: 'lactosefree',
@@ -433,6 +446,78 @@ const customItemMap = new Map([
   ['Acqua frizzante', 'acqua-frizzante'],
 ]);
 
+const buildPizzaItemConfig = (context = null) => {
+  const itemName = context && context.itemName ? context.itemName : 'Pizza';
+  const allergens = Array.isArray(context && context.allergens)
+    ? context.allergens.map((allergen) => normalizeText(allergen))
+    : [];
+  const hasGluten = allergens.includes('glutine');
+  const hasDairy = allergens.includes('latte');
+
+  const fields = [
+    {
+      id: 'impasto',
+      label: 'Base',
+      type: 'select',
+      required: true,
+      defaultValue: 'margherita',
+      options: [
+        { value: 'bianca', label: 'Bianca' },
+        { value: 'rossa', label: 'Rossa' },
+        { value: 'margherita', label: 'Margherita' },
+      ],
+    },
+    {
+      id: 'dough',
+      label: 'Impasto',
+      type: 'radio',
+      required: false,
+      defaultValue: 'standard',
+      options: [
+        { value: 'standard', label: 'Standard' },
+        { value: 'integrale', label: 'Integrale +1€', price: 1 },
+      ],
+    },
+  ];
+
+  if (hasGluten) {
+    const doughField = fields.find((field) => field.id === 'dough');
+    if (doughField) {
+      doughField.options.push({ value: 'senza-glutine', label: 'Senza glutine +1€', price: 1 });
+    }
+  }
+
+  if (hasDairy) {
+    fields.push({
+      id: 'lactosefree',
+      label: 'Senza lattosio',
+      type: 'checkbox',
+      pricePerItem: 0,
+      options: [{ value: 'senza-lattosio', label: 'Senza lattosio' }],
+    });
+  }
+
+  fields.push({
+    id: 'note',
+    label: 'Note',
+    type: 'text',
+    placeholder: 'Es. ben cotta',
+  });
+
+  return {
+    title: itemName,
+    subtitle: 'Scegli impasto e varianti disponibili. Integrale/senza glutine non sono combinabili.',
+    fields,
+  };
+};
+
+const getModalConfig = (type = activeModalType, context = activeModalContext) => {
+  if (type === 'pizza-item') {
+    return buildPizzaItemConfig(context);
+  }
+  return customizationConfigs[type] || null;
+};
+
 const formatPrice = (price) => {
   if (!Number.isFinite(price)) {
     return '';
@@ -585,33 +670,77 @@ const initLogoSwap = () => {
   });
 };
 
+const compactCustomNotePart = (part) => {
+  const text = String(part || '').trim();
+  if (!text) {
+    return '';
+  }
+  const normalized = normalizeText(text);
+  if (normalized.includes('senza glutine') || normalized.includes('senz.glut')) {
+    return 'senz.glut.';
+  }
+  if (normalized.includes('senza lattosio') || normalized.includes('senz.latt')) {
+    return 'senz.latt.';
+  }
+  if (normalized.includes('impasto integrale') || normalized === 'integrale' || normalized.includes('integr.')) {
+    return 'integr.';
+  }
+  const ingredientiMatch = text.match(/^ingredienti:\s*(.+)$/i);
+  if (ingredientiMatch) {
+    return `con: ${ingredientiMatch[1].trim()}`;
+  }
+  const conMatch = text.match(/^con:\s*(.+)$/i);
+  if (conMatch) {
+    return `con: ${conMatch[1].trim()}`;
+  }
+  const impastoMatch = text.match(/^impasto:\s*(.+)$/i);
+  if (impastoMatch) {
+    const value = impastoMatch[1].trim();
+    if (normalizeText(value) === 'integrale') {
+      return 'integr.';
+    }
+    return `base: ${value}`;
+  }
+  const baseMatch = text.match(/^base:\s*(.+)$/i);
+  if (baseMatch) {
+    return `base: ${baseMatch[1].trim()}`;
+  }
+  return text;
+};
+
 const formatItemLabel = (item) => {
   const baseName = item && item.nome ? item.nome : 'Piatto';
   const note = item && item.customNote ? String(item.customNote).trim() : '';
   if (!note) {
     return baseName;
   }
-  const normalized = normalizeText(note);
-  const hasGlutenFree = normalized.includes('senza glutine');
-  const hasLactoseFree = normalized.includes('senza lattosio');
-  if (hasGlutenFree || hasLactoseFree) {
-    const onlyFlags =
-      normalized.replace(/senza glutine|senza lattosio|\||,|;|\s+/g, '').trim() === '';
-    if (onlyFlags) {
-      const flags = [
-        hasGlutenFree ? 'senza glutine' : null,
-        hasLactoseFree ? 'senza lattosio' : null,
-      ].filter(Boolean);
-      return `${baseName} - ${flags.join(', ')}`;
-    }
+
+  const parts = note
+    .split('|')
+    .map((part) => compactCustomNotePart(part))
+    .filter(Boolean);
+  if (!parts.length) {
+    return baseName;
   }
-  return `${baseName} - ${note}`;
+
+  const uniqueParts = [];
+  const seen = new Set();
+  parts.forEach((part) => {
+    const key = normalizeText(part);
+    if (!seen.has(key)) {
+      seen.add(key);
+      uniqueParts.push(part);
+    }
+  });
+
+  return `${baseName} - ${uniqueParts.join(' | ')}`;
 };
 
 const shortenOrderLabel = (label, maxLength = 56) => {
   const text = String(label || '')
     .replace(/\s+/g, ' ')
-    .replace(/^ingredienti:\s*/i, 'Ingredienti: ')
+    .replace(/^ingredienti:\s*/i, 'Con: ')
+    .replace(/^con:\s*/i, 'Con: ')
     .trim();
   if (!text) {
     return '';
@@ -651,7 +780,9 @@ const shortenOrderLabel = (label, maxLength = 56) => {
   ]);
 
   const abbreviations = new Map([
-    ['ingredienti:', 'Ing.'],
+    ['con:', 'Con:'],
+    ['pizza', 'Pizza'],
+    ['margherita', 'Margherita'],
     ['salsiccia', 'sals.'],
     ['friarielli', 'friar.'],
     ['prosciutto', 'prosc.'],
@@ -980,28 +1111,9 @@ const createMenuItem = (item, category) => {
   let glutenInput = null;
   let lactoseInput = null;
   const categoryName = normalizeText(category.categoria || '');
+  const isPizzaCategory = categoryName.includes('pizze');
 
-  if (!isCustom && categoryName.includes('pizze')) {
-    const hasGluten = allergens.includes('glutine');
-    if (hasGluten) {
-      const glutenWrap = document.createElement('label');
-      glutenWrap.className = 'menu__gluten';
-
-      glutenInput = document.createElement('input');
-      glutenInput.type = 'checkbox';
-      glutenInput.className = 'menu__gluten-input';
-
-      const glutenText = document.createElement('span');
-      glutenText.textContent = 'Senza glutine';
-
-      glutenWrap.appendChild(glutenInput);
-      glutenWrap.appendChild(glutenText);
-      togglesWrap.appendChild(glutenWrap);
-      hasToggles = true;
-    }
-  }
-
-  if (!isCustom && (categoryName.includes('pizze') || categoryName.includes('calzoni'))) {
+  if (!isCustom && !isPizzaCategory && categoryName.includes('calzoni')) {
     const hasDairy = allergens.includes('latte');
     if (hasDairy) {
       const lactoseWrap = document.createElement('label');
@@ -1088,6 +1200,23 @@ const createMenuItem = (item, category) => {
       return;
     }
     if (event.target.closest('.menu__info') || event.target.closest('.menu__info-panel')) {
+      return;
+    }
+    if (isPizzaCategory) {
+      if (isCustom) {
+        openModal(customType);
+        return;
+      }
+      if (!hasBasePrice) {
+        return;
+      }
+      openModal('pizza-item', {
+        baseKey: key,
+        category: category.categoria,
+        itemName: item.nome,
+        basePrice,
+        allergens: [...allergens],
+      });
       return;
     }
     if (isCustom) {
@@ -1373,8 +1502,12 @@ const addToCart = (key, sourceEl) => {
 
 const addCustomToCart = (item, qty) => {
   const key = `custom::${slugify(item.nome)}::${Date.now()}`;
-  const baseKey = customTypeBaseKey.get(activeModalType);
+  const contextBaseKey = activeModalContext && activeModalContext.baseKey;
+  const baseKey = contextBaseKey || customTypeBaseKey.get(activeModalType);
   let category = item.category;
+  if (!category && activeModalContext && activeModalContext.category) {
+    category = activeModalContext.category;
+  }
   if (!category && baseKey && menuItems.has(baseKey)) {
     category = menuItems.get(baseKey).category;
   }
@@ -1632,13 +1765,19 @@ const buildTextField = (field) => {
 };
 
 const buildModalState = () => {
-  const config = customizationConfigs[activeModalType];
+  const config = getModalConfig();
   if (!config || !modalBodyEl) {
     return null;
   }
 
   const values = {};
   let baseTotal = 0;
+  if (activeModalType === 'pizza-item') {
+    const contextBasePrice = Number(activeModalContext && activeModalContext.basePrice);
+    if (Number.isFinite(contextBasePrice)) {
+      baseTotal = contextBasePrice;
+    }
+  }
   let isValid = true;
 
   config.fields.forEach((field) => {
@@ -1898,13 +2037,17 @@ const buildModalItem = (type, state) => {
   let nome = 'Personalizzazione';
 
   if (type === 'pizza') {
-    const base = values.base ? values.base.label : 'Pizza';
-    nome = `Pizza ${base}`;
+    const base = values.base ? values.base.label : 'Personalizzata';
+    nome = base;
     const extras = values.ingredienti ? values.ingredienti.items : [];
     if (extras.length) {
-      notes.push(`Ingredienti: ${extras.join(', ')}`);
+      notes.push(`Con: ${extras.join(', ')}`);
     }
-    if (values.glutenfree && values.glutenfree.items.length) {
+    if (values.dough && values.dough.value === 'integrale') {
+      notes.push('Impasto integrale');
+    } else if (values.dough && values.dough.value === 'senza-glutine') {
+      notes.push('Impasto senza glutine');
+    } else if (values.glutenfree && values.glutenfree.items.length) {
       notes.push('Impasto senza glutine');
     }
     if (values.lactosefree && values.lactosefree.items.length) {
@@ -1916,10 +2059,29 @@ const buildModalItem = (type, state) => {
     nome = 'Calzone personalizzato';
     const extras = values.ingredienti ? values.ingredienti.items : [];
     if (extras.length) {
-      notes.push(`Ingredienti: ${extras.join(', ')}`);
+      notes.push(`Con: ${extras.join(', ')}`);
     }
-    if (values.glutenfree && values.glutenfree.items.length) {
+    if (values.dough && values.dough.value === 'integrale') {
+      notes.push('Impasto integrale');
+    } else if (values.dough && values.dough.value === 'senza-glutine') {
       notes.push('Impasto senza glutine');
+    } else if (values.glutenfree && values.glutenfree.items.length) {
+      notes.push('Impasto senza glutine');
+    }
+    if (values.lactosefree && values.lactosefree.items.length) {
+      notes.push('Senza lattosio');
+    }
+  }
+
+  if (type === 'pizza-item') {
+    nome = activeModalContext && activeModalContext.itemName ? activeModalContext.itemName : 'Pizza';
+    if (values.impasto && values.impasto.label) {
+      notes.push(`Base: ${values.impasto.label}`);
+    }
+    if (values.dough && values.dough.value === 'integrale') {
+      notes.push('Impasto integrale');
+    } else if (values.dough && values.dough.value === 'senza-glutine') {
+      notes.push('Senza glutine');
     }
     if (values.lactosefree && values.lactosefree.items.length) {
       notes.push('Senza lattosio');
@@ -1980,13 +2142,15 @@ const buildModalItem = (type, state) => {
   };
 };
 
-const openModal = (type) => {
-  const config = customizationConfigs[type];
+const openModal = (type, context = null) => {
+  const nextContext = context && typeof context === 'object' ? { ...context } : null;
+  const config = getModalConfig(type, nextContext);
   if (!config || !modalEl || !modalBodyEl) {
     return;
   }
 
   activeModalType = type;
+  activeModalContext = nextContext;
   modalBodyEl.innerHTML = '';
 
   if (modalTitleEl) {
@@ -2035,6 +2199,7 @@ const closeModal = () => {
   modalEl.setAttribute('aria-hidden', 'true');
   document.body.classList.remove('is-locked');
   activeModalType = null;
+  activeModalContext = null;
 };
 
 const handleModalAdd = () => {
