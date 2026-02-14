@@ -175,7 +175,7 @@ const menu = [ //Menù completo 08/01/2026
         categoria: "Dolci",
         prodotti: [
             { nome: "Paste", prezzo: 1.20, immagine: "img/dolci/paste.jpg", allergeni: ["glutine", "latte"] },
-            { nome: "Dolce monoporzione", prezzo: 4, immagine: "img/dolci/dolcist.jpg", allergeni: ["glutine", "latte"] },
+            { nome: "Dolce monoporzione", prezzo: 4.50, immagine: "img/dolci/dolcist.jpg", allergeni: ["glutine", "latte"] },
             { nome: "Crostata (al kg)", prezzo: 23, descrizione: "specifica la quantità nelle note", immagine: "img/dolci/crosta.jpg", allergeni: ["glutine", "latte"] },
             { nome: "Torte (al kg)", prezzo: 24, descrizione: "specifica la quantità nelle note", immagine: "img/dolci/torta.jpg", allergeni: ["glutine", "latte"] },
             { nome: "Pasticceria (al kg)", prezzo: 23, descrizione: "specifica la quantità nelle note", immagine: "img/dolci/pastic.jpg", allergeni: ["glutine", "latte"] },
