@@ -173,6 +173,7 @@ const ingredientOptions = [
   { value: 'pecorino', label: 'Pecorino' },
   { value: 'pere', label: 'Pere' },
   { value: 'rucola', label: 'Rucola' },
+  { value: 'asparagi', label: 'Asparagi' },
   { value: 'pomodorini', label: 'Pomodorini' },
 ];
 
