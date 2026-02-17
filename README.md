@@ -1,37 +1,46 @@
-# Gustò Donnini — Menu & Ordini (web)
+<img src="img/icone e loghi/favicon.png" style="width: 150px;">
 
-Web app statica (solo HTML/CSS/JS) per consultare il menu, filtrare/cercare i piatti e preparare una comanda da inviare su WhatsApp.
+# Gustò Bistrot - digital menu - new version
 
-## Come si usa
+A complete digital menu that works with WhatsApp to send the order. It can be used by the customers at the bistrot
+directly from their table or it can be used by the waiters.
 
-- Apri `index.html` in un browser (oppure servi la cartella con un server statico).
-- Il menu viene caricato da `menu.js` (variabile globale `window.menu` / `menu`).
-- Aggiungi articoli cliccando sulle card; l’ordine si aggiorna nella sezione “Il tuo ordine”.
-- Per alcune categorie/elementi è disponibile una personalizzazione via modal (con quantità e totale aggiornati).
-- L’invio ordine usa i pulsanti WhatsApp già configurati nella pagina.
+This system has been completely in full use since april 2025, and works pretty fine. This version is a refractor of the first, i modified the UX/UI to gain more and more speed and finesse.
 
-## Struttura progetto
+### Digital menu that:
 
-- `index.html` — pagina principale (menu + ordine + modal).
-- `styles.css` — stile UI.
-- `script.js` — logica interfaccia (filtri, carrello, modal, totale, ecc.).
-- `menu.js` — dati del menu.
-- `img/` — immagini e icone.
-- `old/` — versione precedente (tenuta come riferimento/backup).
+- Show to the users all the dishes available.
 
-## Cosa cambia rispetto alla vecchia versione
+- Has a personalize Pizza modal that shows every single ingredient.
 
-La vecchia versione è conservata in `old/`. La versione attuale (root) introduce:
+- Has gluten free and lactose free options.
 
-- **UI/UX più stabile su mobile**: layout “ordine” vincolato allo schermo, senza overflow orizzontale; testo gestito con wrap + clamp.
-- **Quantità nel modal**: pulsanti `+/-` affiancati all’input, con gestione corretta di `min/max` e disabilitazione ai limiti.
-- **Scroll più prevedibile**: al refresh la pagina riparte sempre dall’alto (niente “ripresa” in basso).
-- **Scrollbar meno invasive**: scrollbar nascoste in modal e pannelli che scrollano, mantenendo lo scroll attivo.
-- **Percorsi asset più robusti**: riferimenti a `img/icone%20e%20loghi/...` (spazi URL-encoded) per evitare rotture in alcuni deploy/server.
-- **Pulizia repo**: aggiunto `.gitignore` per escludere backup/temporanei (`.local_backup/`, `.tmp_*`, ecc.).
+- And much more... [Take a look](https://gustodonnini.com)
 
-## Note
+## Structure and porpouse
 
-- Il progetto non richiede build né dipendenze.
-- Se pubblichi su hosting/static server, assicurati che tutti gli asset in `img/` vengano serviti (attenzione ai path con spazi).
+As i said before, this menu allows you and your restaurant to work much faster than before, the choice to share this menu with the customers is yours. Everything is user-friendly and very simple to use.
 
+This menu was a request by Gustò's owner Marco, and he is very proud of this work, if you're in this zone, take a look
+also at the bistrot.
+
+Here are some screenshots:
+
+<img src="img/screen1.png" style="height: 200px;"> <img src="img/screen2.png" style="height: 200px"> <img src="img/screen3.png" style="height: 200px"> <img src="img/screen4.png" style="height: 200px">
+
+The site is entirely in [HTML](index.html), using a simple [script.js](script.js) for usefull functions (such as formats, animations, WhatsApp message construct and all the ones for the modals), display the dishes in it and an external [CSS](styles.css) for the styles, very similar to my website [cenidev.com](https://cenidev.com). This project also has [menu.js](menu.js) that contains all the dishes.
+
+
+## Gustò's links
+
+- [Website](https://gustodonnini.cenidev.com)
+- [Instagram](https://www.instagram.com/gustodonnini/)
+- [Facebook](https://www.facebook.com/baralimentari.gusto/?locale=it_IT)
+
+
+## Visit my projects
+
+The client is very happy with this website and suggests you involve me in the creation of these websites.
+If you want to see other projects, simply visit [cenidev.com](https://cenidev.com) and enjoy.
+
+© Copyright 2026 Ceni Dev
