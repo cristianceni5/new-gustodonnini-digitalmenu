@@ -43,4 +43,4 @@ The site is entirely in [HTML](index.html), using a simple [script.js](script.js
 The client is very happy with this website and suggests you involve me in the creation of these websites.
 If you want to see other projects, simply visit [cenidev.com](https://cenidev.com) and enjoy.
 
-© Copyright 2026 Ceni Dev
+© Copyright 2026 Ceni Dev | Gustò Donnini
